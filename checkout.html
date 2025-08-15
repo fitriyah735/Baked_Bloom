@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout • Baked Bloom</title>
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>
+    (function(){
+      try{ if(localStorage.getItem('bb_theme')==='dark'){ document.documentElement.classList.add('dark'); } }catch(e){}
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+          <img src="assets/img/logo.svg" alt="Logo">
+          <span>Baked Bloom</span>
+        </a>
+      </div>
+      <div class="actions">
+        <a href="index.html#produk" class="button secondary">Kembali ke Produk</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <h2>Checkout</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Keranjang Belanja</h3>
+          <div id="cart-items"></div>
+        </div>
+        <div class="card">
+          <h3>Detail Pemesan</h3>
+          <form id="checkout-form" onsubmit="submitOrder(event)">
+            <label>Nama Lengkap<br><input class="input" id="cname" required></label><br><br>
+            <label>No. WA<br><input class="input" id="cwa" required placeholder="08xxxxxxxxxx"></label><br><br>
+            <label>Alamat Pengiriman<br><textarea class="input" id="caddr" required placeholder="Tuliskan detail alamat..."></textarea></label><br><br>
+            <h3>Metode Pembayaran</h3>
+            <label><input type="radio" name="pay" value="qris" checked> QRIS (Scan untuk bayar)</label><br>
+            <label><input type="radio" name="pay" value="cod"> Bayar di tempat / Transfer manual</label><br><br>
+            <div id="qris-box" class="card" style="text-align:center">
+              <img src="assets/img/qris.svg" alt="QRIS" style="max-width:260px;width:100%">
+              <p style="margin-top:8px;color:var(--muted);font-size:14px">Ganti gambar ini dengan QRIS asli Anda.</p>
+            </div>
+            <button class="button">Buat Pesanan</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container cols">
+      <div>Terima kasih sudah berbelanja di <strong style="color:var(--brown)">Baked Bloom</strong></div>
+      <div style="text-align:right">
+        <a class="button secondary" href="index.html">Kembali ke Beranda</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  const keyCart='bb_cart_v1';
+  const formatIDR = (n) => new Intl.NumberFormat('id-ID', {style:'currency', currency:'IDR'}).format(n);
+  function getCart(){ try{return JSON.parse(localStorage.getItem(keyCart))||[]}catch(e){return[]} }
+  function setCart(c){ localStorage.setItem(keyCart, JSON.stringify(c)); }
+  function renderCart(){
+    const cart=getCart();
+    const box=document.getElementById('cart-items');
+    if(cart.length===0){ box.innerHTML='<p>Keranjang kosong. <a href="index.html#produk">Pilih produk</a>.</p>'; return; }
+    let total=0;
+    box.innerHTML = cart.map((i,idx)=>{
+      total+= i.price * i.qty;
+      return `
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--border);padding:8px 0">
+        <div>
+          <strong>${i.name}</strong><br>
+          <small>${formatIDR(i.price)} × ${i.qty}</small>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="button secondary" onclick="changeQty(${idx},-1)">-</button>
+          <button class="button secondary" onclick="changeQty(${idx},1)">+</button>
+          <button class="button" onclick="removeItem(${idx})">Hapus</button>
+        </div>
+      </div>`
+    }).join('') + `
+    <div style="text-align:right;margin-top:10px;font-weight:800">Total: ${formatIDR(total)}</div>`;
+  }
+  function changeQty(idx,delta){
+    const cart=getCart();
+    cart[idx].qty = Math.max(1, cart[idx].qty + delta);
+    setCart(cart); renderCart();
+  }
+  function removeItem(idx){
+    const cart=getCart(); cart.splice(idx,1); setCart(cart); renderCart();
+  }
+
+  function submitOrder(e){
+    e.preventDefault();
+    const cart=getCart();
+    if(cart.length===0){ alert('Keranjang kosong.'); return; }
+    const name=document.getElementById('cname').value.trim();
+    const wa=document.getElementById('cwa').value.trim();
+    const addr=document.getElementById('caddr').value.trim();
+    const pay=document.querySelector('input[name="pay"]:checked').value;
+    const textLines = [
+      '*Order Baked Bloom*',
+      'Nama: ' + name,
+      'WA: ' + wa,
+      'Alamat: ' + addr,
+      'Metode: ' + (pay==='qris'?'QRIS':'COD/Transfer'),
+      '',
+      'Pesanan:'
+    ];
+    let total=0;
+    cart.forEach(i=>{ total+= i.price*i.qty; textLines.push('- ' + i.name + ' x' + i.qty + ' = ' + formatIDR(i.price*i.qty)); });
+    textLines.push('');
+    textLines.push('Total: ' + formatIDR(total));
+    const msg = encodeURIComponent(textLines.join('\n'));
+    const waUrl = 'https://wa.me/?text=' + msg;
+    window.open(waUrl, '_blank');
+  }
+  document.addEventListener('DOMContentLoaded', ()=>{
+    renderCart();
+    const radios = document.querySelectorAll('input[name="pay"]');
+    const qris = document.getElementById('qris-box');
+    radios.forEach(r=>r.addEventListener('change', ()=>{
+      qris.style.display = (document.querySelector('input[name="pay"]:checked').value === 'qris') ? 'block' : 'none';
+    }));
+  });
+  </script>
+</body>
+</html>

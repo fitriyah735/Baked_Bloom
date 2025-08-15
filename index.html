@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Baked Bloom — Toko Roti</title>
+  <meta name="description" content="Baked Bloom: roti & kue rumahan dengan bahan berkualitas. Bogor.">
+  <link rel="preload" as="image" href="assets/img/logo.svg">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <script>
+    // Prevent flash of wrong theme
+    (function(){
+      try{
+        const key='bb_theme'; const t=localStorage.getItem(key);
+        if(t==='dark'){ document.documentElement.classList.add('dark'); }
+      }catch(e){}
+    })();
+  </script>
+</head>
+<body>
+  <header>
+    <div class="container nav">
+      <div class="brand">
+        <img src="assets/img/logo.svg" alt="Logo Baked Bloom">
+        <span>Baked Bloom</span>
+      </div>
+      <div class="actions">
+        <button class="theme-toggle" data-theme-toggle>
+          <span>🌓</span><span data-theme-label>Light</span>
+        </button>
+        <a href="#produk" class="button secondary">Produk</a>
+        <a href="#testimoni" class="button secondary">Testimoni</a>
+        <a href="checkout.html" class="button icon">Checkout <span class="cart-pill" data-cart-pill>0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div>
+          <div class="badge">Freshly baked • Setiap Hari</div>
+          <h1>Roti & Kue Hangat untuk Harimu</h1>
+          <p>Kami memanggang dengan bahan terbaik—tanpa pengawet. Rasakan kehangatan di setiap gigitan.</p>
+          <div class="cta">
+            <a href="#produk" class="button icon">Lihat Produk</a>
+            <a href="checkout.html" class="button secondary icon">Checkout</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="produk" class="section container">
+      <h2>Produk Terlaris</h2>
+      <div class="slider">
+        <div class="slides"></div>
+        <div class="controls">
+          <button id="prev" class="control" aria-label="Sebelumnya">‹</button>
+          <button id="next" class="control" aria-label="Berikutnya">›</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="kritik-saran" class="section container">
+      <div class="grid-2">
+        <div class="card revealable">
+          <h3>Kritik & Saran</h3>
+          <form onsubmit="event.preventDefault(); toast('Terima kasih, pesan Anda telah terkirim!'); this.reset();">
+            <label>Nama<br><input class="input" type="text" placeholder="Nama Anda" required></label><br><br>
+            <label>Email (opsional)<br><input class="input" type="email" placeholder="email@contoh.com"></label><br><br>
+            <label>Pesan<br><textarea class="input" placeholder="Tulis kritik atau saran..."></textarea></label><br><br>
+            <button class="button">Kirim</button>
+          </form>
+        </div>
+        <div class="card revealable">
+          <h3>Alamat Toko</h3>
+          <p>Jalan Kasih Sayang No. 01, Bogor</p>
+          <p>Jam Operasional: 07.00–21.00 WIB (Setiap Hari)</p>
+          <div style="margin-top:12px">
+            <a class="button secondary" href="https://maps.google.com/?q=Jalan%20Kasih%20Sayang%20No%2001%20Bogor" target="_blank" rel="noopener">Lihat di Maps</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimoni" class="section container">
+      <h2>Testimoni Pelanggan</h2>
+      <div id="testi-list" class="grid-2"></div>
+      <div class="card" style="margin-top:16px">
+        <h3>Tulis Testimoni Anda</h3>
+        <form onsubmit="submitTestimonial(event)">
+          <div class="grid-2">
+            <label>Nama<br><input id="nama" class="input" type="text" placeholder="Nama Anda" required></label>
+            <label>Pesan<br><input id="pesan" class="input" type="text" placeholder="Singkat saja ya :)" required></label>
+          </div>
+          <br>
+          <button class="button">Kirim Testimoni</button>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container cols">
+      <div>
+        <strong style="color:var(--brown)">Baked Bloom</strong><br>
+        Jalan Kasih Sayang No. 01, Bogor
+      </div>
+      <div style="text-align:right">
+        <span>&copy; <span id="year"></span> Baked Bloom. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+  <script src="assets/js/app.js"></script>
+</body>
+</html>
