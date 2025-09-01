@@ -1,23 +1,23 @@
-# Salone - Free Bootstrap 5 Business Template 
+# Electro - Free Bootstrap 5 eCommerce Template 
 
-- [Demo](https://themewagon.github.io/Electro-Bootstrap/)
+- [Demo](https://themewagon.github.io/iStudio/)
 
 #### Download
 
-- [Download from ThemeWagon](https://themewagon.com/themes/electro-bootstrap/)
+- [Download from ThemeWagon](https://themewagon.com/themes/istudio/)
 
 ## Getting Started
 
 Clone Repository
 
 ```
-https://github.com/themewagon/Electro-Bootstrap.git
+https://github.com/themewagon/iStudio.git
 ```
 
 ## Author
 
 ```
-Salone is developed by Team HTML Codex.
+The template is developed by Team HTML Codex.
 ```
 
 ## License
